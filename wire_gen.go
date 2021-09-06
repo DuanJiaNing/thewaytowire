@@ -12,6 +12,7 @@ import (
 	"thewaytowire/conf"
 	"thewaytowire/db"
 	"thewaytowire/handler/image"
+	"thewaytowire/handler/tests"
 	"thewaytowire/handler/user"
 )
 
@@ -30,8 +31,10 @@ func setup(ctx context.Context) (*http.Server, func(), error) {
 	service := user.NewService(postgresClient, config)
 	imageService := image.NewService()
 	handler := user.NewHandler(service, imageService)
+	testsHandler := tests.NewHandler()
 	handlers := &Handlers{
-		User: handler,
+		User:  handler,
+		Tests: testsHandler,
 	}
 	server := NewServer(handlers, config)
 	return server, func() {
@@ -50,4 +53,4 @@ var datasourceSet = wire.NewSet(db.NewPostgresClient, wire.Bind(new(db.Client), 
 
 var serviceSet = wire.NewSet(image.NewService, user.NewService, wire.Bind(new(user.ImageServiceProvider), new(*image.Service)))
 
-var handlerSet = wire.NewSet(user.NewHandler, wire.Struct(new(Handlers), "*"))
+var handlerSet = wire.NewSet(user.NewHandler, tests.NewHandler, wire.Struct(new(Handlers), "*"))

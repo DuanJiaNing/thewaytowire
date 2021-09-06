@@ -13,6 +13,7 @@ import (
 	"thewaytowire/conf"
 	"thewaytowire/db"
 	"thewaytowire/handler/image"
+	"thewaytowire/handler/tests"
 	"thewaytowire/handler/user"
 )
 
@@ -34,6 +35,7 @@ var serviceSet = wire.NewSet(
 
 var handlerSet = wire.NewSet(
 	user.NewHandler,
+	tests.NewHandler,
 	// ...
 	wire.Struct(new(Handlers), "*"),
 )
